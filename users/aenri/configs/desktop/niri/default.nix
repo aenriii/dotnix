@@ -1,6 +1,8 @@
-{ config, lib, scripts, ... }:
+{ config, lib, pkgs, scripts, ... }:
+  # `call` hand-rolls the module args for the files below, so anything they
+  # need must be listed here -- they are plain imports, not modules.
   let call = lib.flip import {
-    inherit lib scripts config;
+    inherit lib pkgs scripts config;
   };
 in
 {

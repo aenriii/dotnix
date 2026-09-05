@@ -1,4 +1,4 @@
-{ lib, scripts, ... }:
+{ lib, scripts, pkgs, ... }:
   # noctalia v5 IPC. v4 was `qs -c noctalia-shell ipc call <target> <method>`
   # with camelCase methods; v5 is a single binary and the vocabulary is flat,
   # kebab-case command words: `noctalia msg <command> [args]`.
@@ -6,7 +6,7 @@
   let noctalia = argv: builtins.concatLists [[ "noctalia" "msg" ] argv];
 in
 {
-  "Mod+Return".action.spawn = "alacritty";
+  "Mod+Return".action.spawn = lib.getExe pkgs.alacritty;
   "Mod+D".action.spawn = noctalia ["panel-toggle" "launcher"];   # was launcher toggle
   "Mod+ALT+L".action.spawn = noctalia ["session" "lock"];        # was lockScreen lock
   "Mod+Shift+Q".action.spawn = noctalia ["panel-toggle" "session"]; # was sessionMenu toggle

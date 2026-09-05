@@ -13,6 +13,7 @@ in
     rustup
     devenv
     inputs.claude-code.packages.${system}.claude-code
+    git
   ];
 
   programs.neovim = {

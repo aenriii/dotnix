@@ -75,4 +75,33 @@
       ./deaddove/desktop.nix
     ];
   };
+
+  dotnix.greeter = {
+    enable = true;
+    sync-users = [ "aenri" ];
+    settings = {
+      session.default = "niri";
+      keyboard.layout = "us";
+      cursor = { theme = "capitaine-cursors"; size = 24; };
+    };
+  };
+  
+  services.udisks2.enable = true;
+  hardware.bluetooth.enable = true;
+
+  networking.networkmanager.enable = true;
+
+  environment.variables.EDITOR = "nvim";
+  programs.neovim = { enable = true; defaultEditor = true; };
+  security.rtkit.enable = true;
+
+
+  environment.systemPackages = with pkgs; [
+      git wget jq
+      file tree unzip zip
+      ripgrep fd
+      htop lsof psmisc
+      pciutils usbutils dmidecode smartmontools ethtool
+      tmux capitaine-cursors
+    ];
 }
