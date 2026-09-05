@@ -6,6 +6,10 @@
     ./deaddove/hardware.nix
   ];
 
+  hardware.enableRedistributableFirmware = true;
+
+  hardware.graphics.enable32Bit = true;
+
   programs.niri.enable = true;
   programs.niri.package = pkgs.niri;
 
