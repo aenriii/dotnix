@@ -19,10 +19,16 @@ in
   # `programs.niri.package` and `.settings`. Installing niri and setting up
   # the session is a NixOS-level concern -- see programs.niri.enable in
   # hosts/deaddove.nix.
+
+  home.packages = [ pkgs.xwayland-satellite ];
+
   programs.niri = {
     settings = {
       binds = call ./keybinds.nix;
       animations = call ./animations.nix;
+      spawn-at-startup = [
+        { command = [ "xwayland-satellite" ":0" ]; }
+      ];
       # `outputs` is deliberately absent: connectors are host-specific and
       # come from hosts/<host>/desktop.nix. Note these `call`ed values bypass
       # the module system, so anything defined here CANNOT be overridden by a
