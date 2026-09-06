@@ -59,4 +59,25 @@
       ../users/aenri/configs/gaming
     ];
   };
+
+  dotnix = {
+    greeter = {
+      enable = true;
+      sync-users = [ "aenri" ];
+      settings = {
+        session.default = "niri";
+        keyboard.layout = "us";
+        cursor = { theme = "capitaine-cursors"; size = 24; };
+      };
+    };
+    network = {
+      enable = true;
+      bluetooth = true;
+      tailscale = {
+        enable = true;
+        exitNodeProtection = true;
+        caddy = true;
+      };
+    };
+  };
 }
