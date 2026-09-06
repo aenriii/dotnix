@@ -4,6 +4,7 @@
     ../modules
     ./deaddove/disko.nix
     ./deaddove/hardware.nix
+    ./deaddove/services/vaultwarden.nix
   ];
 
   hardware.enableRedistributableFirmware = true;
@@ -12,6 +13,14 @@
 
   programs.niri.enable = true;
   programs.niri.package = pkgs.niri;
+
+  xdg.portal = {
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    config.niri.default = [
+      "gtk"
+      "gnome"
+    ];
+  };
 
   # Left off for the first install, per the staged plan: get a bootable system
   # first, then turn this on with wipe = "none" and live on it before enabling
@@ -63,6 +72,19 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
     shell = pkgs.zsh;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfuU89xnxyVwg3nf/+1q8qqkEljPEfJYYa6jZcffnez aenri@deaddove"
+    ];
+  };
+
+  services.openssh = {
+    enable = true;
+    openFirewall = false;
+    settings = {
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+      PermitRootLogin = "no";
+    };
   };
 
   home-manager = {
@@ -80,20 +102,29 @@
     ];
   };
 
-  dotnix.greeter = {
-    enable = true;
-    sync-users = [ "aenri" ];
-    settings = {
-      session.default = "niri";
-      keyboard.layout = "us";
-      cursor = { theme = "capitaine-cursors"; size = 24; };
+  dotnix = {
+    greeter = {
+      enable = true;
+      sync-users = [ "aenri" ];
+      settings = {
+        session.default = "niri";
+        keyboard.layout = "us";
+        cursor = { theme = "capitaine-cursors"; size = 24; };
+      };
+    };
+    network = {
+      enable = true;
+      bluetooth = true;
+      tailscale = {
+        enable = true;
+        exitNodeProtection = true;
+        caddy = true;
+      };
     };
   };
   
   services.udisks2.enable = true;
-  hardware.bluetooth.enable = true;
-
-  networking.networkmanager.enable = true;
+  services.pcscd.enable = true; # smartcard reader daemon, for the GPG hardware token
 
   environment.variables.EDITOR = "nvim";
   programs.neovim = { enable = true; defaultEditor = true; };
