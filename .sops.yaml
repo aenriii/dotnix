@@ -1,0 +1,8 @@
+keys:
+  - &deaddove age1xk8q65h7t8le92xjv58n06zr45kjat8cre8asxat4ppk9nrh6ykqzy0gev
+
+creation_rules:
+  - path_regex: hosts/deaddove/services/secrets/.*$
+    key_groups:
+      - age:
+          - *deaddove
