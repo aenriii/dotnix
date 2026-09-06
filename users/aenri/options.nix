@@ -5,6 +5,5 @@
     gaming = lib.mkEnableOption "steam and friends";
     gl-compat = lib.mkEnableOption "nixGL compat for gaming off nixOS";
     virt = lib.mkEnableOption "libvirt domains";
-    
   };
 }

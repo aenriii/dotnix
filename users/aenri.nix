@@ -20,5 +20,6 @@
 
     # noctalia's avatar_path points at ~/.face
     file.".face".source = ./aenri/assets/.face.png;
+    file.".config/nix/nix.conf".text = "experimental-features = nix-command flakes";
   };
 }

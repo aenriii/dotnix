@@ -10,11 +10,11 @@ let
   libcMallocLaunch = pkgs.writeShellScript "libc-malloc-launch" ''
     target="$1"
     shift
-
-    if [ -e /etc/ld-nix.so.preload ]; then
+    if preload="$(${pkgs.coreutils}/bin/readlink -f /etc/ld-nix.so.preload 2>/dev/null)" \
+       && [ -f "$preload" ]; then
       exec ${pkgs.bubblewrap}/bin/bwrap \
         --dev-bind / / \
-        --ro-bind ${pkgs.emptyFile} /etc/ld-nix.so.preload \
+        --ro-bind ${pkgs.emptyFile} $preload \
         --die-with-parent \
         -- "$target" "$@"
     fi

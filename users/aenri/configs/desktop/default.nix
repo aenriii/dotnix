@@ -5,6 +5,8 @@
     ./noctalia-shell
     ./zen-browser
     ./zed.nix
+    ./alacritty.nix
+    ./theming.nix
   ];
 
   dotnix.home.sandbox = {
@@ -17,6 +19,7 @@
     vlc
     qbittorrent
     obs-studio
+    nautilus
   ];
   dotnix.home.gui = lib.mkDefault true;
 }
