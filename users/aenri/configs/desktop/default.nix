@@ -20,6 +20,7 @@
     qbittorrent
     obs-studio
     nautilus
+    cider-2
   ];
   dotnix.home.gui = lib.mkDefault true;
 }
