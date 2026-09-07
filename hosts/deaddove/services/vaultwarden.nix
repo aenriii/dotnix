@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 let
   containerAddress = "10.233.2.2";
   domain = "vault.gentoo-danio.ts.net";
