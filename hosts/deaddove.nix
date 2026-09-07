@@ -5,6 +5,7 @@
     ./deaddove/disko.nix
     ./deaddove/hardware.nix
     ./deaddove/services/vaultwarden.nix
+    ./deaddove/services/kiri.nix
   ];
 
   hardware.enableRedistributableFirmware = true;
@@ -28,7 +29,7 @@
   # dotnix.persistence.enable = true;
 
   nixpkgs.config.allowUnfree = true;
-  nix.settings.allowed-users = [ "aenri" ];
+  nix.settings.allowed-users = [ "aenri" "kiri" ];
   nix.gc = { automatic = true; dates = "weekly"; options = "--delete-older-than 30d"; };
   nix.optimise.automatic = true;
   
@@ -100,6 +101,8 @@
       ../users/aenri/configs/gaming
       ./deaddove/desktop.nix
     ];
+
+    users.kiri.imports = [ ../users/kiri.nix ];
   };
 
   dotnix = {

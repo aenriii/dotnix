@@ -1,0 +1,31 @@
+{
+  "telegram": {
+    "bot_token_env": "KIRI_BOT_TOKEN",
+    "allowed_users": [843430624, 1212774212, 2051381381, 7422966005],
+    "poll_timeout": 30,
+    "typing_interval": 4
+  },
+  "claude": {
+    "model_default": "sonnet",
+    "model_casual": "haiku",
+    "casual_threshold_chars": 200,
+    "max_turns": 25,
+    "max_budget_usd": 2.00
+  },
+  "sessions": {
+    "max_size_bytes": 100000,
+    "warn_size_bytes": 75000
+  },
+  "heartbeat": {
+    "check_lock": true
+  },
+  "rate_limit": {
+    "min_seconds_between_wakes": 5
+  },
+  "contacts": {
+    "aenri": 843430624,
+    "asahi": 1212774212,
+    "lexi": 2051381381,
+    "nora": 7422966005
+  }
+}
