@@ -6,9 +6,8 @@ my personal nix config files for desktops and users alike.
 
 ### host `deaddove`
 
-my main pc, not currently nixos but in the future will be hardened via `pyria`,
-shouldnt be running too many things. fitted with a 2nd gen ryzen 7, an rx 7600,
-and 24gb ddr4 ram.
+my main pc, pyria-hardened and running vaultwarden as a background service thru
+tailscale.
 
 ### host `villa`
 
