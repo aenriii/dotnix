@@ -1,33 +1,45 @@
 { config, lib, pkgs, scripts, ... }:
   # `call` hand-rolls the module args for the files below, so anything they
   # need must be listed here -- they are plain imports, not modules.
-  let call = lib.flip import {
-    inherit lib pkgs scripts config;
-  };
-in
+  let
+    call = lib.flip import {
+      inherit lib pkgs scripts config;
+    };
+    # hello https://github.com/Supreeeme/xwayland-satellite/issues/468
+    xwayland-satellite = pkgs.xwayland-satellite.overrideAttrs (
+      old:
+      let
+        version = "0.8.1";
+        src = pkgs.fetchFromGitHub {
+          owner = "Supreeeme";
+          repo = "xwayland-satellite";
+          tag = "v${version}";
+          hash = "sha256-BUE41HjLIGPjq3U8VXPjf8asH8GaMI7FYdgrIHKFMXA=";
+        };
+      in
+      {
+        inherit version src;
+        # buildRustPackage closes over the *original* `cargoHash` argument
+        # when deriving `cargoDeps`, so overriding `cargoHash` here is a
+        # no-op -- `cargoDeps` itself has to be overridden directly.
+        cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
+          inherit (old) pname;
+          inherit version src;
+          hash = "sha256-16L6gsvze+m7XCJlOA1lsPNELE3D364ef2FTdkh0rVY=";
+        };
+      }
+    );
+  in
 {
-  # NOTE: do NOT import inputs.niri-flake.homeModules.config here.
-  # niri-flake's nixosModules.niri already appends it to
-  # home-manager.sharedModules whenever home-manager is present, and importing
-  # it twice is a duplicate declaration of programs.niri.finalConfig.
-  #
-  # The consequence is that this module only works with home-manager running
-  # as a NixOS module. A standalone homeConfiguration that wants niri has to
-  # add homeModules.config at the composition root instead.
 
-  # No `enable` here: niri-flake's homeModules.config declares only
-  # `programs.niri.package` and `.settings`. Installing niri and setting up
-  # the session is a NixOS-level concern -- see programs.niri.enable in
-  # hosts/deaddove.nix.
-
-  home.packages = [ pkgs.xwayland-satellite ];
+  home.packages = [ xwayland-satellite ];
 
   programs.niri = {
     settings = {
       binds = call ./keybinds.nix;
       animations = call ./animations.nix;
       spawn-at-startup = [
-        { command = [ "xwayland-satellite" ":0" ]; }
+        { command = [ "${lib.getExe xwayland-satellite}" ":0" ]; }
       ];
       # `outputs` is deliberately absent: connectors are host-specific and
       # come from hosts/<host>/desktop.nix. Note these `call`ed values bypass
