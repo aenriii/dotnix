@@ -2,5 +2,5 @@
 {
   imports = [
     ./packet-manager.nix
-  ]
+  ];
 }
