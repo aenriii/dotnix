@@ -14,6 +14,7 @@
     equibop.allocator = "libc";
     obsidian.allocator = "libc";
     whatsapp-electron.allocator = "libc";
+    telegram-desktop.allocator = "libc";
   };
   home.packages = with pkgs; [
     vlc
