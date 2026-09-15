@@ -15,6 +15,8 @@
   programs.niri.enable = true;
   programs.niri.package = pkgs.niri;
 
+  services.desktopManager.plasma6.enable = true;
+
   xdg.portal = {
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     config.niri.default = [
@@ -99,6 +101,7 @@
       ../users/aenri.nix
       ../users/aenri/configs/desktop
       ../users/aenri/configs/gaming
+      ../users/aenri/configs/school
       ./deaddove/desktop.nix
     ];
 
