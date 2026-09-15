@@ -45,6 +45,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    NixVirt =
+      {
+        url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
 
     # out-of-nixpkgs apps
     
@@ -89,7 +94,7 @@
     # system configuration
     nixpkgs, nixpkgs-aenriii, pyria, home-manager,
     lanzaboote, disko, sops-nix,
-    impermanence,
+    impermanence, NixVirt,
     # out-of-nixpkgs apps
     zen-browser, nixgl, niri-flake,
     noctalia-shell, noctalia-greeter,
