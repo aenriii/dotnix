@@ -39,8 +39,6 @@ in
                   mountpoint = "/";
                   mountOptions = btrfsOpts;
                 };
-                # Empty on purpose -- dotnix.persistence.wipe = "btrfs-rollback"
-                # restores @ from this. Never snapshot a populated @ into it.
                 "@blank" = { };
 
                 "@persist" = {
@@ -77,7 +75,10 @@ in
                 };
                 "@games" = {
                   mountpoint = "/home/aenri/Games";
-                  mountOptions = btrfsOpts;
+                  mountOptions = btrfsOpts ++ [
+                    "X-mount.owner=aenri"
+                    "X-mount.group=users"
+                  ];
                 };
               };
             };
