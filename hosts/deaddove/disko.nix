@@ -80,6 +80,13 @@ in
                     "X-mount.group=users"
                   ];
                 };
+                "@vms" = {
+                  mountpoint = "/home/aenri/VMs";
+                  mountOptions = btrfsOpts ++ [
+                    "X-mount.owner=aenri"
+                    "X-mount.group=users"
+                  ];
+                };
               };
             };
           };
