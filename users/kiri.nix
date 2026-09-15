@@ -16,6 +16,7 @@ let
       httpx
       faiss
       sentence-transformers
+      einops
     ]
   );
 in

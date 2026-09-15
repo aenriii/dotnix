@@ -22,11 +22,6 @@ in
     curl
   ];
 
-  # wake_kiri.sh calls this exact absolute path rather than looking up
-  # `claude` on PATH, so the only way for the home-manager-managed
-  # claude-code package to actually take effect is to point this symlink at
-  # it directly. `L+` replaces whatever's there (her old raw ELF copy) on
-  # every activation/boot.
   systemd.tmpfiles.rules = [
     "L+ /home/kiri/.local/bin/claude - - - - ${inputs.claude-code.packages.${system}.claude-code}/bin/claude"
   ];
@@ -44,10 +39,6 @@ in
       ExecStart = "${pkgs.python3}/bin/python3 /home/kiri/glue/kiri-gateway.py";
       Restart = "on-failure";
       RestartSec = 10;
-      # wake_kiri.sh (spawned from kiri-gateway.py, inheriting its env) calls
-      # bare `python3` for config lookups and to run memory_store.py -- that
-      # needs to resolve to the ML-equipped interpreter in users/kiri.nix's
-      # pythonEnv, not systemd's bare default PATH.
       Environment = "PATH=/etc/profiles/per-user/kiri/bin:/run/current-system/sw/bin:/usr/bin:/bin";
       EnvironmentFile = "/home/kiri/.env";
       StandardOutput = "append:/home/kiri/logs/gateway-stdout.log";
@@ -61,8 +52,6 @@ in
       Type = "oneshot";
       User = "kiri";
       ExecStart = "/home/kiri/glue/heartbeat.sh";
-      # Same reasoning as kiri-gateway.service above -- heartbeat.sh calls
-      # wake_kiri.sh too.
       Environment = "PATH=/etc/profiles/per-user/kiri/bin:/run/current-system/sw/bin:/usr/bin:/bin";
       EnvironmentFile = "/home/kiri/.env";
       StandardOutput = "append:/home/kiri/logs/heartbeat-stdout.log";
