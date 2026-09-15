@@ -9,7 +9,12 @@
     nixpkgs = {
       url = "github:NixOS/nixpkgs/nixos-unstable";
     };
-    
+
+    nixpkgs-aenriii = {
+      url = "github:aenriii/nixpkgs/master";
+      flake = false;
+    };
+
     pyria = {
       url = "github:lvehrt/pyria.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -79,22 +84,30 @@
     };
     
   };
-  outputs = inputs @ { 
-    self, 
+  outputs = inputs @ {
+    self,
     # system configuration
-    nixpkgs, pyria, home-manager,
+    nixpkgs, nixpkgs-aenriii, pyria, home-manager,
     lanzaboote, disko, sops-nix,
     impermanence,
     # out-of-nixpkgs apps
     zen-browser, nixgl, niri-flake,
     noctalia-shell, noctalia-greeter,
     claude-code, deploy-rs,
-  }: {
+  }:
+  let
+    cisco-packet-tracer-overlay = final: prev: {
+      cisco-packet-tracer_9 = final.callPackage
+        "${nixpkgs-aenriii}/pkgs/by-name/ci/cisco-packet-tracer_9/package.nix"
+        { };
+    };
+  in {
     nixosConfigurations.deaddove = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit self inputs; };
 
       modules = [
+        { nixpkgs.overlays = [ cisco-packet-tracer-overlay ]; }
         disko.nixosModules.disko
         lanzaboote.nixosModules.lanzaboote
         home-manager.nixosModules.home-manager
@@ -121,14 +134,12 @@
     };
 
     homeConfigurations.aenri = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
       extraSpecialArgs = { inherit self inputs; };
       modules = [
         ./users/aenri.nix
       ];
     };
     homeConfigurations."aenri@gui" = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
       extraSpecialArgs = { inherit self inputs; };
       modules = [
         ./users/aenri.nix

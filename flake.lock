@@ -432,6 +432,23 @@
         "type": "github"
       }
     },
+    "nixpkgs-aenriii": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789427599,
+        "narHash": "sha256-ZWxrMMM+7xdkVRS1OsdjPgSgaB3H3rjkd/dftM6Olc0=",
+        "owner": "aenriii",
+        "repo": "nixpkgs",
+        "rev": "3746c726230aaaa0518650f313d47f91c71f3646",
+        "type": "github"
+      },
+      "original": {
+        "owner": "aenriii",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-stable": {
       "locked": {
         "lastModified": 1782847189,
@@ -588,6 +605,7 @@
         "niri-flake": "niri-flake",
         "nixgl": "nixgl",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-aenriii": "nixpkgs-aenriii",
         "noctalia-greeter": "noctalia-greeter",
         "noctalia-shell": "noctalia-shell",
         "pyria": "pyria",
