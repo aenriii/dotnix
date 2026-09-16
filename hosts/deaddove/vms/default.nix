@@ -18,6 +18,7 @@ in {
     domains = [
       (call ./ubuntu-desktop.nix)
       (call ./ubuntu-server.nix)
+      (call ./win10.nix)
     ];
   };
 }
