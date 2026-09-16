@@ -6,6 +6,7 @@
     ./deaddove/hardware.nix
     ./deaddove/services/vaultwarden.nix
     ./deaddove/services/kiri.nix
+    ./deaddove/virtualization.nix
   ];
 
   hardware.enableRedistributableFirmware = true;
@@ -73,7 +74,7 @@
   };
   users.users.aenri = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
+    extraGroups = [ "wheel" "networkmanager" "video" "audio" "libvirtd" ];
     shell = pkgs.zsh;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfuU89xnxyVwg3nf/+1q8qqkEljPEfJYYa6jZcffnez aenri@deaddove"

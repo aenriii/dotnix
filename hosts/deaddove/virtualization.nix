@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 {
   imports = [
     inputs.NixVirt.nixosModules.default
@@ -10,5 +10,11 @@
     swtpm.enable = true;
   };
   
+  environment.systemPackages = with pkgs; [
+    qemu
+    qemu_kvm
+    qemu-utils
+    libvirt
+  ];
   
 }

@@ -23,7 +23,7 @@ in
     networking.nftables.enable = cfg.enable;
     networking.firewall = {
       enable = cfg.enable;
-      trustedInterfaces = [ config.services.tailscale.interfaceName ];
+      trustedInterfaces = [ config.services.tailscale.interfaceName "virbr0" ];
       allowedUDPPorts = [ config.services.tailscale.port ];
       checkReversePath = lib.mkIf (cfg.tailscale.exitNodeProtection) (lib.mkDefault "loose") ;
     };

@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 let
   btrfsOpts = [ "noatime" "compress=zstd:1" ];
 in
@@ -97,6 +97,7 @@ in
 
   systemd.tmpfiles.rules = [
     "z /home/aenri/Games 0755 aenri users -"
+    "L+ /var/lib/qemu/firmware - - - - ${pkgs.qemu}/share/qemu/firmware"
   ];
 
   services.fstrim.enable = true;
