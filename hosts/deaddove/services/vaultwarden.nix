@@ -2,6 +2,8 @@
 let
   containerAddress = "10.233.2.2";
   domain = "vault.gentoo-danio.ts.net";
+  vaultwardenUid = 996;
+  vaultwardenGid = 996;
 in
 {
   sops.secrets.vaultwarden-env = {
@@ -19,8 +21,8 @@ in
   };
 
   systemd.tmpfiles.rules = [
-    "d /persist/vaultwarden/data 0700 root root -"
-    "d /persist/vaultwarden/backup 0700 root root -"
+    "d /persist/vaultwarden/data 0700 ${toString vaultwardenUid} ${toString vaultwardenGid} -"
+    "d /persist/vaultwarden/backup 0700 ${toString vaultwardenUid} ${toString vaultwardenGid} -"
     "d /persist/vaultwarden/tailscale-state 0700 root root -"
   ];
 
@@ -81,6 +83,9 @@ in
           Restart = "on-failure";
           RestartSec = "5s";
         };
+
+        users.users.vaultwarden.uid = vaultwardenUid;
+        users.groups.vaultwarden.gid = vaultwardenGid;
 
         services.vaultwarden = {
           enable = true;
