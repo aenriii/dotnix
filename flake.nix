@@ -87,7 +87,11 @@
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
+    iloader = {
+      url = "github:nab138/iloader";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs @ {
     self,
@@ -98,7 +102,7 @@
     # out-of-nixpkgs apps
     zen-browser, nixgl, niri-flake,
     noctalia-shell, noctalia-greeter,
-    claude-code, deploy-rs,
+    claude-code, deploy-rs, iloader
   }:
   let
     cisco-packet-tracer-overlay = final: prev: {

@@ -128,6 +128,7 @@
         caddy = true;
       };
     };
+    iloader.enable = true;
   };
   
   services.udisks2.enable = true;
