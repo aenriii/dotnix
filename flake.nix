@@ -92,6 +92,11 @@
       url = "github:nab138/iloader";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    keyroost = {
+      url = "github:framefilter/keyroost";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs @ {
     self,
@@ -102,7 +107,8 @@
     # out-of-nixpkgs apps
     zen-browser, nixgl, niri-flake,
     noctalia-shell, noctalia-greeter,
-    claude-code, deploy-rs, iloader
+    claude-code, deploy-rs, iloader,
+    keyroost
   }:
   let
     cisco-packet-tracer-overlay = final: prev: {

@@ -43,9 +43,6 @@ in
       };
 
       system.monitor.enabled = true;
-
-      # ── bar ────────────────────────────────────────────────────────────
-
       
       bar.main = {
         position = "top";
@@ -67,11 +64,10 @@ in
       };
 
       widget = {
-        # Qt format tokens became strftime.
         clock = {
-          format = "{:%Y/%m/%d @ %H:%M:%S}"; # was "yyyy/MM/dd @ HH:mm:ss"
-          vertical_format = "{:%H %M - %d %m}"; # was "HH mm - dd MM"
-          tooltip_format = "{:%H:%M %a, %b %d}"; # was "HH:mm ddd, MMM dd"
+          format = "{:%Y/%m/%d @ %H:%M:%S}";
+          vertical_format = "{:%H %M - %d %m}";
+          tooltip_format = "{:%H:%M %a, %b %d}";
         };
 
         cpu = {

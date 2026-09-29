@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, inputs, ... }:
 {
   imports = [
     ./niri
@@ -15,6 +15,7 @@
     obsidian.allocator = "libc";
     whatsapp-electron.allocator = "libc";
     telegram-desktop.allocator = "libc";
+    google-chrome.allocator = "libc";
   };
   home.packages = with pkgs; [
     vlc
@@ -22,6 +23,7 @@
     obs-studio
     nautilus
     cider-2
+    inputs.keyroost.packages.x86_64-linux.keyroost
   ];
   dotnix.home.gui = lib.mkDefault true;
 }
