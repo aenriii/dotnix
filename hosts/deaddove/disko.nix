@@ -87,6 +87,11 @@ in
                     "X-mount.group=users"
                   ];
                 };
+                "@shared" = {
+                  mountpoint = "/srv";
+                  mountOptions = btrfsOpts ++ [  
+                  ];
+                };
               };
             };
           };
@@ -97,6 +102,8 @@ in
 
   systemd.tmpfiles.rules = [
     "z /home/aenri/Games 0755 aenri users -"
+    "d /srv 2755 aenri users -"
+    "A+ /srv - - - - default:group:users:rwX"
     "L+ /var/lib/qemu/firmware - - - - ${pkgs.qemu}/share/qemu/firmware"
   ];
 
