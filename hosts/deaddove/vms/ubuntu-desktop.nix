@@ -7,7 +7,7 @@ in {
     uuid = vmUuid;
     memory = { count = 4; unit = "GiB"; };
     storage_vol = { pool = "default"; volume = "${vmUuid}.qcow2"; };
-    install_vol = "/home/aenri/VMs/ISOs/ubuntu-lts-26.iso";
+    # install_vol = "/home/aenri/VMs/ISOs/ubuntu-lts-26.iso";
     nvram_path = "/home/aenri/VMs/nvram/${vmUuid}.fd";
   });
 }
