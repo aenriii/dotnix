@@ -241,21 +241,29 @@ def queue_file(chat_id) -> Path:
     return QUEUE_DIR / f"{chat_id}.txt"
 
 
-def append_to_session(chat_id, sender: str, text: str):
-    """Append a message line to the session file."""
+def append_to_session(chat_id, sender: str, text: str, sent_at: float | None = None):
+    """Append a message line to the session file.
+
+    sent_at, if given, is a Telegram message unix timestamp (message["date"]) —
+    the time the sender actually hit send, not when this process got around to
+    handling it. Those diverge after a restart, a rate-limit sleep, or a
+    reconnect gap, so prefer it over wall-clock time when it's available.
+    """
     SESSION_DIR.mkdir(parents=True, exist_ok=True)
     sf = session_file(chat_id)
-    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    dt = datetime.fromtimestamp(sent_at) if sent_at is not None else datetime.now()
+    ts = dt.strftime("%Y-%m-%d %H:%M:%S")
     line = f"[{ts}] {sender}: {text}\n"
     with open(sf, "a", encoding="utf-8") as f:
         f.write(line)
 
 
-def append_to_queue(chat_id, sender: str, text: str):
-    """Append a message to the queue file."""
+def append_to_queue(chat_id, sender: str, text: str, sent_at: float | None = None):
+    """Append a message to the queue file. See append_to_session for sent_at."""
     QUEUE_DIR.mkdir(parents=True, exist_ok=True)
     qf = queue_file(chat_id)
-    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    dt = datetime.fromtimestamp(sent_at) if sent_at is not None else datetime.now()
+    ts = dt.strftime("%Y-%m-%d %H:%M:%S")
     line = f"[{ts}] {sender}: {text}\n"
     with open(qf, "a", encoding="utf-8") as f:
         f.write(line)
@@ -499,7 +507,7 @@ def process_update(tg: TelegramAPI, update: dict, config: dict):
         return
 
     # ── Append to session ─────────────────────────────────────────────────────
-    append_to_session(chat_id, user_name, text)
+    append_to_session(chat_id, user_name, text, message.get("date"))
 
     # ── Rate limit ────────────────────────────────────────────────────────────
     now = time.time()
@@ -513,7 +521,7 @@ def process_update(tg: TelegramAPI, update: dict, config: dict):
         qf = queue_file(chat_id)
         # Only send the "i'm busy" message once per queue buildup
         already_queued = qf.exists() and qf.stat().st_size > 0
-        append_to_queue(chat_id, user_name, text)
+        append_to_queue(chat_id, user_name, text, message.get("date"))
         if not already_queued:
             tg.send_message(chat_id, "i'm thinking about something else rn, one sec!")
         log.info(f"Queued message for chat_id={chat_id} (Kiri is locked)")
