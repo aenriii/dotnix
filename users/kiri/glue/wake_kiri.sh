@@ -161,7 +161,7 @@ $MEMORY_BLOCK
 "
         fi
 
-        PROMPT="You received a Telegram message. Here is your conversation history for this chat:
+        PROMPT="You are being woken up at $(date). You received a Telegram message. Here is your conversation history for this chat:
 
 ---
 $SESSION_CONTENT
@@ -212,7 +212,7 @@ Output a brief summary of what you did (this will be logged, not sent to anyone)
         rm -f "/tmp/kiri-size-warned.${CHANNEL_ID}"
         SESSION_CONTENT=$(cat "$SESSION_FILE")
 
-        PROMPT="A /newsession command was issued for this chat.
+        PROMPT="It's $(date). A /newsession command was issued for this chat.
 
 Here is the full session that is about to be cleared:
 ---
