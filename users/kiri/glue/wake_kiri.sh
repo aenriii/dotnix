@@ -229,16 +229,17 @@ After you respond, the session file will be cleared."
 esac
 
 # Call claude code
-RESPONSE=$(/home/kiri/.local/bin/claude -p \
+# The prompt goes in on stdin, not argv: the kernel caps a single argument at
+# 128 KiB (MAX_ARG_STRLEN), and long sessions blow past that with E2BIG.
+EXIT_CODE=0
+RESPONSE=$(printf '%s' "$PROMPT" | /home/kiri/.local/bin/claude -p \
     --dangerously-skip-permissions \
     --append-system-prompt-file "$COMBINED" \
     --model "$MODEL" \
     --max-turns "$MAX_TURNS" \
     --max-budget-usd "$MAX_BUDGET" \
     --output-format text \
-    "$PROMPT" 2>>"$LOG_DIR/claude-errors.log")
-
-EXIT_CODE=$?
+    2>>"$LOG_DIR/claude-errors.log") || EXIT_CODE=$?
 
 if [ $EXIT_CODE -ne 0 ]; then
     echo "sorry, i had trouble waking up properly. (exit code: $EXIT_CODE)"
