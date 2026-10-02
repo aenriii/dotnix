@@ -33,9 +33,26 @@ FRAGMENTS_DIR.mkdir(parents=True, exist_ok=True)
 def _load_model():
     import os
     os.environ["CUDA_VISIBLE_DEVICES"] = ""  # force CPU — 1050 Ti is incompatible with installed torch
+    import torch
     from sentence_transformers import SentenceTransformer
     # trust_remote_code needed for nomic-embed-text
-    return SentenceTransformer(MODEL_NAME, trust_remote_code=True, device="cpu")
+    model = SentenceTransformer(MODEL_NAME, trust_remote_code=True, device="cpu")
+    # nomic's remote-code modeling file calls self.get_extended_attention_mask(),
+    # which transformers removed from PreTrainedModel in the 5.x line — restore it
+    # here instead of pinning transformers back.
+    auto_model = model[0].auto_model
+    if not hasattr(auto_model, "get_extended_attention_mask"):
+        def get_extended_attention_mask(attention_mask, input_shape, device=None, dtype=None):
+            dtype = dtype if dtype is not None else torch.float32
+            if attention_mask.dim() == 3:
+                extended = attention_mask[:, None, :, :]
+            else:
+                extended = attention_mask[:, None, None, :]
+            extended = extended.to(dtype=dtype)
+            return (1.0 - extended) * torch.finfo(dtype).min
+
+        auto_model.get_extended_attention_mask = get_extended_attention_mask
+    return model
 
 
 def _load_faiss():
