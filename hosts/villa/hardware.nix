@@ -1,11 +1,14 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 {
+  # Dell Latitude 5421 -- i7-11850H (Tiger Lake-H), 24G DDR4.
   boot.initrd.availableKernelModules = [
     "xhci_pci"
+    "thunderbolt"
+    "vmd"
     "nvme"
     "usb_storage"
     "sd_mod"
-    "thunderbolt"
+    "rtsx_pci_sdmmc"
   ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
@@ -14,33 +17,46 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-  # Intel 8265 wifi needs redistributable firmware to associate at all.
+  # Intel AX201/AX210 wifi and the Xe iGPU's GuC/HuC both need
+  # redistributable firmware.
   hardware.enableRedistributableFirmware = true;
 
-  hardware.graphics.enable = true;
+  # Tiger Lake Xe graphics: iHD for VA-API, VPL runtime for QSV.
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      vpl-gpu-rt
+    ];
+  };
+  environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
 
-  # Kaby Lake R throttles hard without this.
+  # 45W H-series part in a thin chassis; thermald keeps it from bouncing
+  # off the thermal limit.
   services.thermald.enable = true;
 
-  # Lenovo ships UEFI capsule updates for this model through LVFS.
+  # Dell ships BIOS, TB and dock firmware through LVFS.
   services.fwupd.enable = true;
 
-  # Trackpoint + trackpad.
+  # Touchpad, plus the pointing stick on models that have one
+  # (harmless if it's absent).
   services.libinput.enable = true;
   hardware.trackpoint = {
     enable = true;
     emulateWheel = true;
   };
 
-  # Fingerprint reader is a Synaptics unit that only works with a
-  # proprietary blob and is unreliable on Linux -- left off deliberately,
-  # and it's the wrong trust anchor for a pyria host anyway.
+  # The optional fingerprint reader sits behind Broadcom ControlVault,
+  # which has no usable Linux support -- left off deliberately, and it's
+  # the wrong trust anchor for a pyria host anyway.
   # services.fprintd.enable = false;
 
   powerManagement.enable = true;
 
   # IMPORTANT, and not something Nix can set for you:
-  # this generation defaults its BIOS sleep state to "Windows 10" (S0ix /
-  # Modern Standby), which on Linux drains the battery flat in a closed bag.
-  # In BIOS -> Config -> Power, set "Sleep State" to "Linux" for real S3.
+  # - Tiger Lake Dells only do S0ix (s2idle); there's no S3 toggle in BIOS.
+  #   It works on Linux, but expect some drain while suspended.
+  # - If the NVMe doesn't show up in the installer, the BIOS has
+  #   "RAID On" (Intel VMD) set. "vmd" above handles it, but switching
+  #   Storage -> SATA/NVMe Operation to "AHCI/NVMe" is simpler.
 }

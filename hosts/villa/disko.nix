@@ -88,6 +88,6 @@ in
     };
   };
 
-  # No hibernate yet, so zram covers the 16G of soldered LPDDR3.
+  # No hibernate yet, so zram covers the 24G of DDR4.
   zramSwap.enable = true;
 }
