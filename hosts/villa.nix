@@ -1,6 +1,7 @@
 { pkgs, inputs, ... }:
 {
-  imports = [
+  imports = [ 
+    ../modules
     ./villa/disko.nix
     ./villa/hardware.nix
   ];

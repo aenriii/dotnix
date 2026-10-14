@@ -139,7 +139,6 @@
       modules = [
         disko.nixosModules.disko
         lanzaboote.nixosModules.lanzaboote
-        impermanence.nixosModules.impermanence
         home-manager.nixosModules.home-manager
         sops-nix.nixosModules.sops
         niri-flake.nixosModules.niri
