@@ -11,8 +11,8 @@ tailscale.
 
 ### host `villa`
 
-my main laptop, a thinkpad x1 carbon 6th gen with an i7 and 16gb of ram. uses
-`deaddove` as a nix build server whenever possible.
+my main laptop, a dell latitude 5421 with an i7 11850h and 24gb of ddr4. uses
+`deaddove` as a nix build server whenever possible via tailscale (WIP).
 
 ### user `aenri`
 
