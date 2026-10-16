@@ -30,7 +30,7 @@ in
     };
   };
   config = lib.mkIf cfg.enable {
-    programs.noctalia-greeter = {
+    services.displayManager.noctalia-greeter = {
       enable = true;
       passwordless-sync-users = cfg.sync-users;
       settings = cfg.settings;
