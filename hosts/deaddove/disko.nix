@@ -87,11 +87,6 @@ in
                     "X-mount.group=users"
                   ];
                 };
-                "@shared" = {
-                  mountpoint = "/srv";
-                  mountOptions = btrfsOpts ++ [  
-                  ];
-                };
               };
             };
           };
