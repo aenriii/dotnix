@@ -10,11 +10,6 @@
       url = "github:NixOS/nixpkgs/nixos-unstable";
     };
 
-    nixpkgs-aenriii = {
-      url = "github:aenriii/nixpkgs/master";
-      flake = false;
-    };
-
     pyria = {
       url = "github:lvehrt/pyria.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -83,6 +78,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    claude-desktop = {
+      url = "github:patrickjaja/claude-desktop-extra";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -101,20 +101,21 @@
   outputs = inputs @ {
     self,
     # system configuration
-    nixpkgs, nixpkgs-aenriii, pyria, home-manager,
+    nixpkgs, pyria, home-manager,
     lanzaboote, disko, sops-nix,
     impermanence, NixVirt,
     # out-of-nixpkgs apps
     zen-browser, nixgl, niri-flake,
     noctalia-shell, noctalia-greeter,
-    claude-code, deploy-rs, iloader,
-    keyroost
+    claude-code, claude-desktop, deploy-rs,
+    iloader, keyroost
   }:
   let
-    cisco-packet-tracer-overlay = final: prev: {
-      cisco-packet-tracer_9 = final.callPackage
-        "${nixpkgs-aenriii}/pkgs/by-name/ci/cisco-packet-tracer_9/package.nix"
-        { };
+    # my awesome overlay
+    my-awesome-overlay = final: prev: {
+      claude-code = claude-code.packages.x86_64-linux.claude-code;
+      claude-desktop = claude-desktop.packages.x86_64-linux.default;
+      keyroost = keyroost.packages.x86_64-linux.keyroost;
     };
   in {
     nixosConfigurations.deaddove = nixpkgs.lib.nixosSystem {
@@ -122,7 +123,7 @@
       specialArgs = { inherit self inputs; };
 
       modules = [
-        { nixpkgs.overlays = [ cisco-packet-tracer-overlay ]; }
+        { nixpkgs.overlays = [ my-awesome-overlay ]; }
         disko.nixosModules.disko
         lanzaboote.nixosModules.lanzaboote
         home-manager.nixosModules.home-manager
@@ -137,6 +138,7 @@
       specialArgs = { inherit self inputs; };
 
       modules = [
+        { nixpkgs.overlays = [ my-awesome-overlay ]; }
         disko.nixosModules.disko
         lanzaboote.nixosModules.lanzaboote
         home-manager.nixosModules.home-manager
@@ -150,12 +152,14 @@
     homeConfigurations.aenri = home-manager.lib.homeManagerConfiguration {
       extraSpecialArgs = { inherit self inputs; };
       modules = [
+        { nixpkgs.overlays = [ my-awesome-overlay ]; }
         ./users/aenri.nix
       ];
     };
     homeConfigurations."aenri@gui" = home-manager.lib.homeManagerConfiguration {
       extraSpecialArgs = { inherit self inputs; };
       modules = [
+        { nixpkgs.overlays = [ my-awesome-overlay ]; }
         ./users/aenri.nix
         ./users/aenri/configs/desktop
       ];
