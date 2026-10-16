@@ -17,6 +17,7 @@
     telegram-desktop.allocator = "libc";
     google-chrome.allocator = "libc";
     cider-2.allocator = "libc";
+    claude-desktop.allocator = "libc";
   };
   home.packages = with pkgs; [
     vlc

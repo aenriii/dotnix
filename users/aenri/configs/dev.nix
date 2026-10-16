@@ -13,7 +13,6 @@ in
     rustup
     devenv
     claude-code
-    claude-desktop
   ];
 
   home.sessionPath = [ "$HOME/.cargo/bin" ];
