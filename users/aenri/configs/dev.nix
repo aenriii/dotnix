@@ -12,7 +12,8 @@ in
     nil
     rustup
     devenv
-    inputs.claude-code.packages.${system}.claude-code
+    claude-code
+    claude-desktop
   ];
 
   home.sessionPath = [ "$HOME/.cargo/bin" ];

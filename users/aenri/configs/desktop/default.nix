@@ -16,14 +16,14 @@
     whatsapp-electron.allocator = "libc";
     telegram-desktop.allocator = "libc";
     google-chrome.allocator = "libc";
+    cider-2.allocator = "libc";
   };
   home.packages = with pkgs; [
     vlc
     qbittorrent
     obs-studio
     nautilus
-    cider-2
-    inputs.keyroost.packages.x86_64-linux.keyroost
+    keyroost
   ];
   dotnix.home.gui = lib.mkDefault true;
 }
