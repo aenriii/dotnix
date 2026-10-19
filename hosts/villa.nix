@@ -1,30 +1,19 @@
 { pkgs, inputs, ... }:
 {
-  imports = [ 
+  imports = [
     ../modules
     ./villa/disko.nix
     ./villa/hardware.nix
   ];
-
-  programs.niri.enable = true;
-  programs.niri.package = pkgs.niri;
-
   nixpkgs.config.allowUnfree = true;
-  nix.settings.allowed-users = [ "aenri" ];
-  nix.gc = { automatic = true; dates = "weekly"; options = "--delete-older-than 30d"; };
-  nix.optimise.automatic = true;
-
+  networking.hostName = "villa";
+  time.timeZone = "America/Indiana/Indianapolis";
+  system.stateVersion = "26.05";
+  
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
-
-  programs.zsh.enable = true;
-  
-  networking.hostName = "villa";
-  time.timeZone = "America/Indiana/Indianapolis";
-  system.stateVersion = "26.05";
-
   pyria = {
     enable = true;
     kernel = {
@@ -60,7 +49,6 @@
       ../users/aenri/configs/gaming
     ];
   };
-
   dotnix = {
     greeter = {
       enable = true;
@@ -79,6 +67,45 @@
         exitNodeProtection = true;
         caddy = true;
       };
+    };
+    librepods = {
+      enable = true;
+      spoofAppleVendorId = true;
+    };
+  };
+  nix = {
+    settings = {
+      allowed-users = [ "aenri" ];
+      builders-use-substitutes = true;
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+    optimise.automatic = true;
+    distributedBuilds = true;
+    buildMachines = [{
+      hostName = "deaddove.gentoo-danio.ts.net";
+      sshUser = "nixremote";
+      sshKey = "/root/.ssh/nixremote";
+      protocol = "ssh-ng";
+      systems = [ "x86_64-linux" "i686-linux" ];
+      maxJobs = 8;
+      speedFactor = 2;
+      supportedFeatures = [ "benchmark" "big-parallel" "kvm" "nixos-test" ];
+      publicHostKey = "c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSVA3eUpya3NubTBLQkxDb3Q5dGhXaDlONnl1TXE3TWRSdkl3RURsMUpkUnggcm9vdEBkZWFkZG92ZQo=";
+    }];
+  };
+  programs = {
+    zsh.enable = true;
+    niri = {
+      enable = true;
+      package = pkgs.niri;
+    };
+    neovim = { 
+      enable = true; 
+      defaultEditor = true; 
     };
   };
 }
