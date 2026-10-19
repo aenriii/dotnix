@@ -10,7 +10,19 @@
   ];
 
   dotnix.home.sandbox = {
-    signal-desktop.allocator = "libc";
+    signal-desktop = {
+      allocator = "libc";
+      package = pkgs.symlinkJoin {
+        name = "signal-desktop";
+        paths = [ pkgs.signal-desktop ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/signal-desktop \
+            --add-flags "--password-store=gnome-libsecret"
+        '';
+        inherit (pkgs.signal-desktop) meta;
+      };
+    };
     equibop.allocator = "libc";
     obsidian.allocator = "libc";
     whatsapp-electron.allocator = "libc";
