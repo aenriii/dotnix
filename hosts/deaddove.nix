@@ -8,15 +8,11 @@
     ./deaddove/services/kiri.nix
     ./deaddove/virtualization.nix
   ];
-
-  hardware.enableRedistributableFirmware = true;
-
-  hardware.graphics.enable32Bit = true;
-
-  programs.niri.enable = true;
-  programs.niri.package = pkgs.niri;
-
-  services.desktopManager.plasma6.enable = true;
+  networking.hostName = "deaddove";
+  time.timeZone = "America/Indiana/Indianapolis";
+  system.stateVersion = "26.05";
+  nixpkgs.config.allowUnfree = true;
+  security.rtkit.enable = true;
 
   xdg.portal = {
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
@@ -25,36 +21,40 @@
       "gnome"
     ];
   };
-
-  # Left off for the first install, per the staged plan: get a bootable system
-  # first, then turn this on with wipe = "none" and live on it before enabling
-  # the rollback. @persist and @blank already exist in disko.nix.
-  # dotnix.persistence.enable = true;
-
-  nixpkgs.config.allowUnfree = true;
-  nix.settings.allowed-users = [ "aenri" "kiri" ];
-  nix.gc = { automatic = true; dates = "weekly"; options = "--delete-older-than 30d"; };
-  nix.optimise.automatic = true;
-  
-  
-  # Without this NixOS defaults to grub and the build fails an assertion --
-  # and even if it didn't, the EVO would have no bootloader.
-  #
-  # systemd-boot for the first install. Switching to lanzaboote is a second
-  # step, after `sbctl create-keys` on the running system:
-  #   boot.loader.systemd-boot.enable = lib.mkForce false;
-  #   boot.lanzaboote = { enable = true; pkiBundle = "/var/lib/sbctl"; };
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
+  programs = {
+    zsh.enable = true;
+    niri = {
+      enable = true;
+      package = pkgs.niri;
+    };
+    neovim = { 
+      enable = true; 
+      defaultEditor = true; 
+    };
   };
-
-  programs.zsh.enable = true;
-
-  networking.hostName = "deaddove";
-  time.timeZone = "America/Indiana/Indianapolis";
-  system.stateVersion = "26.05";
-
+  hardware = {
+    enableRedistributableFirmware = true;
+    graphics.enable32Bit = true;
+  };
+  nix = {
+    settings.allowed-users = [ "aenri" "kiri" "nixremote" ];
+    gc = { 
+      automatic = true; 
+      dates = "weekly"; 
+      options = "--delete-older-than 30d"; 
+    };
+    optimise.automatic = true;
+  };
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    extraModprobeConfig = ''
+      options kvm ignore_msrs=1 report_ignored_msrs=0
+      options hid_apple fnmode=2
+    '';
+  };
   pyria = {
     enable = true;
     kernel = {
@@ -72,25 +72,22 @@
       allocator.enable = true;
     };
   };
-  users.users.aenri = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "video" "audio" "libvirtd" ];
-    shell = pkgs.zsh;
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfuU89xnxyVwg3nf/+1q8qqkEljPEfJYYa6jZcffnez aenri@deaddove"
-    ];
-  };
-
-  services.openssh = {
-    enable = true;
-    openFirewall = false;
-    settings = {
-      PasswordAuthentication = false;
-      KbdInteractiveAuthentication = false;
-      PermitRootLogin = "no";
+  users.users = {
+    aenri = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" "networkmanager" "video" "audio" "libvirtd" ];
+      shell = pkgs.zsh;
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfuU89xnxyVwg3nf/+1q8qqkEljPEfJYYa6jZcffnez aenri@deaddove"
+      ];
+    };
+    nixremote = {
+      isNormalUser = true;
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOO57k/E9X6EF/FYdVwR5sP4sIaOSt/Jp9guoxGHXgHb root@villa"
+      ];
     };
   };
-
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -108,7 +105,6 @@
 
     users.kiri.imports = [ ../users/kiri.nix ];
   };
-
   dotnix = {
     greeter = {
       enable = true;
@@ -130,21 +126,28 @@
     };
     iloader.enable = true;
   };
-  
-  services.udisks2.enable = true;
-  services.pcscd.enable = true; # smartcard reader daemon, for the GPG hardware token
-
-  environment.variables.EDITOR = "nvim";
-  programs.neovim = { enable = true; defaultEditor = true; };
-  security.rtkit.enable = true;
-
-
-  environment.systemPackages = with pkgs; [
-      git wget jq
-      file tree unzip zip
-      ripgrep fd
-      htop lsof psmisc
-      pciutils usbutils dmidecode smartmontools ethtool
-      tmux capitaine-cursors
-    ];
+  services = {
+    udisks2.enable = true;
+    pcscd.enable = true;
+    openssh = {
+      enable = true;
+      openFirewall = false;
+      settings = {
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+        PermitRootLogin = "no";
+      };
+    };
+  };
+  environment = {
+    variables.EDITOR = "nvim";
+    systemPackages = with pkgs; [
+        git wget jq
+        file tree unzip zip
+        ripgrep fd
+        htop lsof psmisc
+        pciutils usbutils dmidecode smartmontools ethtool
+        tmux capitaine-cursors
+      ];
+  };
 }
