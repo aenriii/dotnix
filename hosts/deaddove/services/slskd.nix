@@ -37,12 +37,13 @@ in
       container = {
         users.users.slskd = {
           inherit uid;
-          extraGroups = [ "users" ];
         };
-        users.groups.slskd.gid = uid;
 
         services.slskd = {
           enable = true;
+          # run with users as the primary group so downloads land as
+          # 2001:users and the rest of us can tidy up incoming
+          group = "users";
           openFirewall = true;
           environmentFile = "/run/secrets/slskd.env";
           settings = {
@@ -57,8 +58,10 @@ in
 
         # ReadWritePaths entries have to exist or the unit won't start
         systemd.tmpfiles.rules = [
-          "d /downloads/complete 0775 - - -"
-          "d /downloads/incomplete 0775 - - -"
+          "d /downloads/complete 0775 - users -"
+          "d /downloads/incomplete 0775 - users -"
+          # catch anything still owned by the old slskd group
+          "Z /downloads - - users -"
         ];
         # ntfs3 keeps the mode we create things with, and we only get in
         # through the group
