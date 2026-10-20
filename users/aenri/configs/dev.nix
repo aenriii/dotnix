@@ -1,10 +1,12 @@
 {
+  config,
   pkgs,
   inputs,
   ...
 }:
 let
   system = pkgs.stdenv.hostPlatform.system;
+  signing = config.dotnix.home.git.signing;
 in
 {
   home.packages = with pkgs; [
@@ -37,8 +39,7 @@ in
       advice.defaultBranchName = false;
     };
     signing = {
-      key = "CC3624C1D78F4FEDD7522A22EC3014D92E7084DA";
-      format = "openpgp";
+      inherit (signing) key format;
       signByDefault = true;
       allowedSigners = ''
         aenri@lovehart.cc namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAvad2WciYhgG8UZyZAoVrbpFm/wnAnVpkoHTA2Drxht aenri@lovehart.cc signing

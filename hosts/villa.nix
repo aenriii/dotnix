@@ -45,6 +45,9 @@
 
     users.aenri.imports = [
       ../users/aenri.nix
+      {
+        dotnix.home.git.signing.key = "";
+      }
       ../users/aenri/configs/desktop
       ../users/aenri/configs/gaming
     ];
