@@ -1,11 +1,11 @@
 {
 
   description = "hi!";
-  
+
   inputs = {
 
     # system-wide configuration
-    
+
     nixpkgs = {
       url = "github:NixOS/nixpkgs/nixos-unstable";
     };
@@ -47,12 +47,12 @@
       };
 
     # out-of-nixpkgs apps
-    
+
     zen-browser = {
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     nixgl = {
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -62,12 +62,12 @@
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     noctalia-shell = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     noctalia-greeter = {
       url = "github:noctalia-dev/noctalia-greeter";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -116,6 +116,7 @@
       claude-code = claude-code.packages.x86_64-linux.claude-code;
       claude-desktop = claude-desktop.packages.x86_64-linux.default;
       keyroost = keyroost.packages.x86_64-linux.keyroost;
+      librepods = final.callPackage ./pkgs/librepods { };
     };
   in {
     nixosConfigurations.deaddove = nixpkgs.lib.nixosSystem {
@@ -165,5 +166,5 @@
       ];
     };
   };
-  
+
 }
