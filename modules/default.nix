@@ -5,5 +5,6 @@
     ./persistence.nix
     ./network.nix
     ./iloader.nix
+    ./librepods.nix
   ];
 }
