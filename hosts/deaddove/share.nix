@@ -9,7 +9,7 @@
       "x-systemd.device-timeout=10s"
       "uid=1000"
       "gid=100"
-      "umask=022"
+      "umask=002"
     ];
   };
 }

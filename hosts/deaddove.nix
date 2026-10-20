@@ -4,6 +4,10 @@
     ../modules
     ./deaddove/disko.nix
     ./deaddove/hardware.nix
+    ./deaddove/share.nix
+    ./deaddove/services/navidrome.nix
+    ./deaddove/services/slskd.nix
+    ./deaddove/services/qbittorrent.nix
     ./deaddove/services/vaultwarden.nix
     ./deaddove/services/kiri.nix
     ./deaddove/virtualization.nix
