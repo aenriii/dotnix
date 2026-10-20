@@ -26,8 +26,6 @@ in
           content = {
             type = "luks";
             name = "cryptroot";
-            # SATA SSD: pass discards through so fstrim reaches the drive.
-            # Tradeoff: leaks used-block counts to anyone holding the disk.
             settings.allowDiscards = true;
             extraFormatArgs = [ "--type" "luks2" "--pbkdf" "argon2id" ];
 
@@ -97,7 +95,7 @@ in
 
   systemd.tmpfiles.rules = [
     "z /home/aenri/Games 0755 aenri users -"
-    "d /srv 2755 aenri users -"
+    "d /srv 2775 aenri users -"
     "A+ /srv - - - - default:group:users:rwX"
     "L+ /var/lib/qemu/firmware - - - - ${pkgs.qemu}/share/qemu/firmware"
   ];
