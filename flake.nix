@@ -92,7 +92,6 @@
       url = "github:nab138/iloader";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     keyroost = {
       url = "github:framefilter/keyroost";
       inputs.nixpkgs.follows = "nixpkgs";
