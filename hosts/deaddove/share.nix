@@ -2,7 +2,7 @@
 {
   fileSystems."/share" = {
     device = "/dev/disk/by-id/ata-WDC_WD40EZRZ-00GXCB0_WD-WCC7K3DDDNSK-part4";
-    fsType = "ntfs3";
+    fsType = "ntfs";
     options = [
       "noatime"
       "nofail"
