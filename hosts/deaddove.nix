@@ -103,7 +103,6 @@
       ../users/aenri.nix
       ../users/aenri/configs/desktop
       ../users/aenri/configs/gaming
-      ../users/aenri/configs/school
       ./deaddove/desktop.nix
     ];
 
