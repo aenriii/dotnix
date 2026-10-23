@@ -6,8 +6,8 @@
     "typing_interval": 4
   },
   "claude": {
-    "model_default": "sonnet",
-    "model_casual": "haiku",
+    "model_default": "opus",
+    "model_casual": "sonnet",
     "casual_threshold_chars": 200,
     "max_turns": 25,
     "max_budget_usd": 2.00

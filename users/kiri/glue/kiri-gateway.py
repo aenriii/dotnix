@@ -301,7 +301,6 @@ def wake_kiri(chat_id, sender_name: str, message: str, wake_type: str = "message
             env=env,
             capture_output=True,
             text=True,
-            timeout=600,  # 10 minute max
         )
         if result.returncode != 0:
             log.error(f"wake_kiri.sh exited {result.returncode}: {result.stderr[:500]}")
@@ -405,7 +404,6 @@ def handle_newsession(tg: TelegramAPI, chat_id, config: dict):
             ["/home/kiri/glue/newsession.sh", str(chat_id)],
             capture_output=True,
             text=True,
-            timeout=300,
         )
         response = result.stdout.strip()
     except Exception as e:
