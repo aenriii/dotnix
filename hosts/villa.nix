@@ -88,17 +88,17 @@
     };
     optimise.automatic = true;
     distributedBuilds = true;
-    buildMachines = [{
-      hostName = "deaddove.gentoo-danio.ts.net";
-      sshUser = "nixremote";
-      sshKey = "/root/.ssh/nixremote";
-      protocol = "ssh-ng";
-      systems = [ "x86_64-linux" "i686-linux" ];
-      maxJobs = 8;
-      speedFactor = 2;
-      supportedFeatures = [ "benchmark" "big-parallel" "kvm" "nixos-test" ];
-      publicHostKey = "c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSVA3eUpya3NubTBLQkxDb3Q5dGhXaDlONnl1TXE3TWRSdkl3RURsMUpkUnggcm9vdEBkZWFkZG92ZQo=";
-    }];
+    #buildMachines = [{
+      #hostName = "deaddove.gentoo-danio.ts.net";
+      #sshUser = "nixremote";
+      #sshKey = "/root/.ssh/nixremote";
+      #protocol = "ssh-ng";
+      #systems = [ "x86_64-linux" "i686-linux" ];
+      #maxJobs = 8;
+      #speedFactor = 2;
+      #supportedFeatures = [ "benchmark" "big-parallel" "kvm" "nixos-test" ];
+      #publicHostKey = "c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSVA3eUpya3NubTBLQkxDb3Q5dGhXaDlONnl1TXE3TWRSdkl3RURsMUpkUnggcm9vdEBkZWFkZG92ZQo=";
+    #}];
   };
   programs = {
     zsh.enable = true;
