@@ -19,6 +19,7 @@
   port,
   bindMounts ? { },
   forwardPorts ? [ ],
+  allowedDevices ? [ ],
   container,
 }:
 { config, ... }:
@@ -50,7 +51,7 @@ in
     hostAddress = "10.233.${toString subnet}.1";
     localAddress = "10.233.${toString subnet}.2";
     enableTun = true;
-    inherit forwardPorts;
+    inherit forwardPorts allowedDevices;
     # the host only brings up our veth once nspawn reports ready, and by
     # default that waits for the container's whole boot transaction,
     # tailscaled-autoconnect included; a first-time login needs the network,
