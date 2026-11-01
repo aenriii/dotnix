@@ -40,6 +40,7 @@
       animations = call ./animations.nix;
       spawn-at-startup = [
         { command = [ "${lib.getExe xwayland-satellite}" ":0" ]; }
+        { command = [ "${lib.getExe pkgs.gpu-screen-recorder-ui}" ]; }
       ];
       # `outputs` is deliberately absent: connectors are host-specific and
       # come from hosts/<host>/desktop.nix. Note these `call`ed values bypass

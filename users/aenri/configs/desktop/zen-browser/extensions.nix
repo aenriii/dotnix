@@ -26,4 +26,6 @@ builtins.listToAttrs [
   (extension "bitwarden-password-manager" "{446900e4-71c2-419f-a6a7-df9c091e268b}" true)
   # facebook containers because i love facebook marketplace
   (extension "facebook-container" "@contain-facebook" false)
+  # leechblock; 20 minutes per 4 hours on twitter max
+  (extension "leechblock-ng" "leechblockng@proginosko.com" true)
 ]
