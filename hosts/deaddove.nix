@@ -9,6 +9,7 @@
     ./deaddove/services/slskd.nix
     ./deaddove/services/qbittorrent.nix
     ./deaddove/services/vaultwarden.nix
+    ./deaddove/services/jellyfin.nix
     ./deaddove/services/kiri.nix
     ./deaddove/virtualization.nix
   ];
@@ -34,6 +35,10 @@
     neovim = { 
       enable = true; 
       defaultEditor = true; 
+    };
+    gpu-screen-recorder = {
+      enable = true;
+      ui.enable = true;
     };
   };
   hardware = {
