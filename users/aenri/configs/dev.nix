@@ -5,7 +5,6 @@
   ...
 }:
 let
-  system = pkgs.stdenv.hostPlatform.system;
   signing = config.dotnix.home.git.signing;
 in
 {
@@ -29,7 +28,7 @@ in
 
   programs.git = {
     enable = true;
-    ignores = [ "**/.claude/settings.local.json" ];
+    ignores = [ "**/.claude/" ];
     settings = {
       user = {
         name = "Aenri Lovehart";
@@ -50,10 +49,10 @@ in
   programs.gpg.enable = true;
   services.gpg-agent = {
     enable = true;
-    pinentry.package = pkgs.pinentry-gnome3;
-    # Keygrip 68C393C9... (the "Aenri Rose Lovehart" identity) lives on a
-    # hardware token, not in the software keyring -- scdaemon (on by
-    # default) is what lets gpg-agent talk to it via pcscd.
+    pinentry.package = 
+      if pkgs.stdenv.hostPlatform.isDarwin 
+      then pkgs.pinentry_mac 
+      else pkgs.pinentry-gnome3;
   };
 
   programs.gh = {

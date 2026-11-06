@@ -1,16 +1,8 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  home.packages = [
-    pkgs.zed-editor
-  ];
-  home.pointerCursor = {
-    enable  = true;
-    package = pkgs.capitaine-cursors;
-    name    = "capitaine-cursors";
-    size    = 24;
-    gtk.enable = true;
-  };
   programs.zed-editor = {
+    enable = true;
+    package = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin null;
     extensions = [ "rs" "toml" "nix" "make" "md" "svelte" "ts" "js" "json" ];
     userSettings = {
       lsp = {

@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
-  gtk = {
+  gtk = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     enable = true;
     font = {
       name = "Fira Sans";
@@ -13,5 +13,5 @@
     };
     colorScheme = "dark";
   };
-  home.packages = [ pkgs.nordic ];
+  home.packages = lib.mkIf pkgs.stdenv.hostPlatform.isLinux [ pkgs.nordic ];
 }

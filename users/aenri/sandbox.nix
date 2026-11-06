@@ -84,7 +84,7 @@ let
     let
       pkg = resolve name policy;
     in
-    if policy.allocator == "libc" then wrapLibcMalloc name pkg else pkg;
+    if policy.allocator == "libc" && pkgs.stdenv.hostPlatform.isLinux then wrapLibcMalloc name pkg else pkg;
 in
 {
   options.dotnix.home.sandbox = lib.mkOption {

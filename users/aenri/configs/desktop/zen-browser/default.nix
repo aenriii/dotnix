@@ -11,8 +11,14 @@ let
   };
 in
 {
-  dotnix.home.sandbox.zen-browser = {
-    allocator = "libc";
-    package = zen;
+  imports = [ ./darwin.nix ];
+
+  # linux: everything is baked into the wrapped browser. macOS can't do that
+  # without unsigning Zen.app, see darwin.nix.
+  dotnix.home.sandbox = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+    zen-browser = {
+      allocator = "libc";
+      package = zen;
+    };
   };
 }

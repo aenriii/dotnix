@@ -1,7 +1,8 @@
-{ ... }:
+{ lib, pkgs, ... }:
 {
   programs.alacritty = {
     enable = true;
+    package = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin null; 
     settings = {
       env = {
         TERM = "xterm-256color";
@@ -150,12 +151,13 @@
         { key = "PageDown"; mods = "Shift"; mode = "~Alt"; action = "ScrollPageDown"; }
         { key = "Home"; mods = "Shift"; mode = "~Alt"; action = "ScrollToTop"; }
         { key = "End"; mods = "Shift"; mode = "~Alt"; action = "ScrollToBottom"; }
-        { key = "V"; mods = "Control|Shift"; action = "Paste"; }
-        { key = "C"; mods = "Control|Shift"; action = "Copy"; }
         { key = "F"; mods = "Control|Shift"; action = "SearchForward"; }
         { key = "B"; mods = "Control|Shift"; action = "SearchBackward"; }
         { key = "C"; mods = "Control|Shift"; mode = "Vi"; action = "ClearSelection"; }
         { key = "Key0"; mods = "Control"; action = "ResetFontSize"; }
+      ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+        { key = "V"; mods = "Control|Shift"; action = "Paste"; }
+        { key = "C"; mods = "Control|Shift"; action = "Copy"; }
       ];
 
       general = {
