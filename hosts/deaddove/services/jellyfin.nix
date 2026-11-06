@@ -47,6 +47,9 @@ in
         users.users.jellyfin.uid = uid;
         users.groups.jellyfin.gid = uid;
 
+        # host caddy on :8080 proxies here over the veth for lan clients (tv)
+        networking.firewall.interfaces.eth0.allowedTCPPorts = [ 8096 ];
+
         # mesa's radeonsi vaapi driver
         hardware.graphics.enable = true;
 
