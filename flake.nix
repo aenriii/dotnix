@@ -53,6 +53,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # macOS-only: youwen5's flake has no darwin build. this one ships the
+    # upstream-signed .app plus a home-manager module that delivers policies
+    # through `defaults` instead of writing into (and unsigning) the bundle.
+    zen-browser-darwin = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     nixgl = {
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -104,7 +113,7 @@
     lanzaboote, disko, sops-nix,
     impermanence, NixVirt,
     # out-of-nixpkgs apps
-    zen-browser, nixgl, niri-flake,
+    zen-browser, zen-browser-darwin, nixgl, niri-flake,
     noctalia-shell, noctalia-greeter,
     claude-code, claude-desktop, deploy-rs,
     iloader, keyroost
@@ -112,9 +121,9 @@
   let
     # my awesome overlay
     my-awesome-overlay = final: prev: {
-      claude-code = claude-code.packages.x86_64-linux.claude-code;
-      claude-desktop = claude-desktop.packages.x86_64-linux.default;
-      keyroost = keyroost.packages.x86_64-linux.keyroost;
+      claude-code = claude-code.packages.${final.stdenv.hostPlatform.system}.claude-code;
+      claude-desktop = claude-desktop.packages.${final.stdenv.hostPlatform.system}.default;
+      keyroost = keyroost.packages.${final.stdenv.hostPlatform.system}.keyroost;
       librepods = final.callPackage ./pkgs/librepods { };
     };
   in {
@@ -133,21 +142,21 @@
         ./hosts/deaddove.nix
       ];
     };
-    nixosConfigurations.villa = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = { inherit self inputs; };
-
-      modules = [
-        { nixpkgs.overlays = [ my-awesome-overlay ]; }
-        disko.nixosModules.disko
-        lanzaboote.nixosModules.lanzaboote
-        home-manager.nixosModules.home-manager
-        sops-nix.nixosModules.sops
-        niri-flake.nixosModules.niri
-        pyria.nixosModules.pyria
-        ./hosts/villa.nix
-      ];
-    };
+#     nixosConfigurations.villa = nixpkgs.lib.nixosSystem {
+#       system = "x86_64-linux";
+#       specialArgs = { inherit self inputs; };
+# 
+#       modules = [
+#         { nixpkgs.overlays = [ my-awesome-overlay ]; }
+#         disko.nixosModules.disko
+#         lanzaboote.nixosModules.lanzaboote
+#         home-manager.nixosModules.home-manager
+#         sops-nix.nixosModules.sops
+#         niri-flake.nixosModules.niri
+#         pyria.nixosModules.pyria
+#         ./hosts/villa.nix
+#       ];
+#     };
 
     homeConfigurations.aenri = home-manager.lib.homeManagerConfiguration {
       extraSpecialArgs = { inherit self inputs; };
