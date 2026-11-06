@@ -14,11 +14,12 @@
     ./deaddove/virtualization.nix
   ];
   networking.hostName = "deaddove";
+  networking.firewall.allowedTCPPorts = [ 8080 ];
   time.timeZone = "America/Indiana/Indianapolis";
   system.stateVersion = "26.05";
   nixpkgs.config.allowUnfree = true;
   security.rtkit.enable = true;
-
+  security.polkit.enablePkexecWrapper = true;
   xdg.portal = {
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     config.niri.default = [
@@ -108,6 +109,7 @@
       ../users/aenri.nix
       ../users/aenri/configs/desktop
       ../users/aenri/configs/gaming
+      ../users/aenri/configs/desktop/linux.nix
       ./deaddove/desktop.nix
     ];
 

@@ -49,6 +49,7 @@
         dotnix.home.git.signing.key = "758D7B63CF7A838A";
       }
       ../users/aenri/configs/desktop
+      ../users/aenri/configs/desktop/linux.nix
       ../users/aenri/configs/gaming
     ];
   };
