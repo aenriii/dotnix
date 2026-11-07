@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, lib, ... }:
 {
   imports = [
     ../modules
@@ -64,6 +64,7 @@
       options kvm ignore_msrs=1 report_ignored_msrs=0
       options hid_apple fnmode=2
     '';
+    kernel.sysctl."kernel.panic" = 10;
   };
   pyria = {
     enable = true;
@@ -71,6 +72,7 @@
       enable = true;
       flavor = "mainline";
       config = "hardened";
+      amd.sme = false; # explicit so it doesnt blow up; breaks amdgpu
     };
     security = {
       network = {
