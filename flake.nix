@@ -10,6 +10,11 @@
       url = "github:NixOS/nixpkgs/nixos-unstable";
     };
 
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     pyria = {
       url = "github:lvehrt/pyria.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -105,18 +110,29 @@
       url = "github:framefilter/keyroost";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-homebrew = {
+      url = "github:zhaofengli/nix-homebrew";
+    };
+
+    # cask inputs
+
+    homebrew-core = { url = "github:homebrew/homebrew-core"; flake = false; };
+    homebrew-cask = { url = "github:homebrew/homebrew-cask"; flake = false; };
   };
   outputs = inputs @ {
     self,
     # system configuration
-    nixpkgs, pyria, home-manager,
-    lanzaboote, disko, sops-nix,
-    impermanence, NixVirt,
+    nixpkgs, nix-darwin, pyria, home-manager,
+    lanzaboote, disko, sops-nix, impermanence,
+    NixVirt,
     # out-of-nixpkgs apps
-    zen-browser, zen-browser-darwin, nixgl, niri-flake,
-    noctalia-shell, noctalia-greeter,
+    zen-browser, zen-browser-darwin, nixgl,
+    niri-flake, noctalia-shell, noctalia-greeter,
     claude-code, claude-desktop, deploy-rs,
-    iloader, keyroost
+    iloader, keyroost, nix-homebrew
+    # cask inputs
+
   }:
   let
     # my awesome overlay
@@ -157,6 +173,16 @@
 #         ./hosts/villa.nix
 #       ];
 #     };
+    darwinConfigurations.natura = nix-darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
+      specialArgs = { inherit self inputs; };
+      modules = [
+        { nixpkgs.overlays = [ my-awesome-overlay ]; }
+        nix-homebrew.darwinModules.nix-homebrew
+        home-manager.darwinModules.home-manager
+        ./hosts/natura.nix
+      ];
+    };
 
     homeConfigurations.aenri = home-manager.lib.homeManagerConfiguration {
       extraSpecialArgs = { inherit self inputs; };
