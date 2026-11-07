@@ -130,9 +130,9 @@
     zen-browser, zen-browser-darwin, nixgl,
     niri-flake, noctalia-shell, noctalia-greeter,
     claude-code, claude-desktop, deploy-rs,
-    iloader, keyroost, nix-homebrew
+    iloader, keyroost, nix-homebrew,
     # cask inputs
-
+    homebrew-core, homebrew-cask
   }:
   let
     # my awesome overlay
