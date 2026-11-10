@@ -16,9 +16,6 @@ let
   extraRoots = lib.subtractLists [ root ] (builtins.attrNames config.environment.persistence);
 in
 {
-  # Imported here rather than in flake.nix so a host gets impermanence by
-  # importing this one file, and can't end up with dotnix.persistence.enable
-  # set but no impermanence module in scope.
   imports = [ inputs.impermanence.nixosModules.impermanence ];
 
   options.dotnix.persistence = {
@@ -85,14 +82,6 @@ in
         '';
       }
       {
-        assertion = cfg.wipe == "btrfs-rollback" -> config.boot.initrd.systemd.enable;
-        message = ''
-          dotnix.persistence.wipe = "btrfs-rollback" needs boot.initrd.systemd.enable.
-          The rollback runs as an initrd systemd unit; the scripted initrd would
-          need boot.initrd.postDeviceCommands instead, which systemd initrd ignores.
-        '';
-      }
-      {
         assertion = cfg.wipe == "btrfs-rollback" -> rootDevice != null;
         message = "dotnix.persistence: can't roll back / -- fileSystems.\"/\".device is unset.";
       }
@@ -103,8 +92,10 @@ in
         # uid/gid allocations. Without this users are renumbered on every
         # boot and file ownership drifts out from under you.
         "/var/lib/nixos"
-        "/var/log"
-      ];
+      ]
+      # A host that mounts /var/log itself (e.g. a btrfs @log subvolume)
+      # already keeps it; a bind mount from ${root} would hide those logs.
+      ++ lib.optional (!(config.fileSystems ? "/var/log")) "/var/log";
       files = [
         "/etc/machine-id"
         # sops-nix derives its age key from the host key by default, so

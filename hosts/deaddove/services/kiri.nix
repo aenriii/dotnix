@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, config, ... }:
 let
   system = pkgs.stdenv.hostPlatform.system;
 in
@@ -9,6 +9,7 @@ in
     createHome = true;
     shell = pkgs.zsh;
     description = "Kiri";
+    hashedPasswordFile = config.sops.secrets.kiri.path;
   };
 
   # Safety net for whatever's left in her home dir that isn't declared in

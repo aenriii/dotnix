@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, lib, config, ... }:
 {
   imports = [
     ../modules
@@ -10,6 +10,7 @@
     ./deaddove/services/qbittorrent.nix
     ./deaddove/services/vaultwarden.nix
     ./deaddove/services/jellyfin.nix
+    ./deaddove/services/audiobookshelf.nix
     ./deaddove/services/kiri.nix
     ./deaddove/virtualization.nix
   ];
@@ -85,21 +86,25 @@
       allocator.enable = true;
     };
   };
-  users.users = {
-    aenri = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" "networkmanager" "video" "audio" "libvirtd" ];
-      shell = pkgs.zsh;
-      openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfuU89xnxyVwg3nf/+1q8qqkEljPEfJYYa6jZcffnez aenri@deaddove"
-      ];
+  users = {
+    users = {
+      aenri = {
+        isNormalUser = true;
+        extraGroups = [ "wheel" "networkmanager" "video" "audio" "libvirtd" ];
+        shell = pkgs.zsh;
+        openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfuU89xnxyVwg3nf/+1q8qqkEljPEfJYYa6jZcffnez aenri@deaddove"
+        ];
+        hashedPasswordFile = config.sops.secrets.aenri.path;
+      };
+      nixremote = {
+        isNormalUser = true;
+        openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOO57k/E9X6EF/FYdVwR5sP4sIaOSt/Jp9guoxGHXgHb root@villa"
+        ];
+      };
     };
-    nixremote = {
-      isNormalUser = true;
-      openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOO57k/E9X6EF/FYdVwR5sP4sIaOSt/Jp9guoxGHXgHb root@villa"
-      ];
-    };
+    mutableUsers = false;
   };
   home-manager = {
     useGlobalPkgs = true;
@@ -149,6 +154,23 @@
       mode = "0664";
       rawMode = "0660";
     };
+    persistence = {
+      enable = true;
+      wipe = "none";
+      directories = [ "/var/lib" "/etc/NetworkManager/system-connections" ];
+      files = [
+        "/etc/ssh/ssh_host_rsa_key" "/etc/ssh/ssh_host_rsa_key.pub"
+        "/etc/ssh/ssh_host_mldsa44_ed25519_key" "/etc/ssh/ssh_host_mldsa44_ed25519_key.pub"
+      ];
+    };
+  };
+  sops = {
+    age.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
+    secrets = lib.genAttrs [ "aenri" "kiri" ] (user: {
+      sopsFile = ./deaddove/secrets/passwords.yaml;
+      key = user;
+      neededForUsers = true;
+    });
   };
   services = {
     udisks2.enable = true;
