@@ -142,6 +142,13 @@
       enable = true;
       user = "aenri";
     };
+    tpm = {
+      enable = true;
+      owner = "aenri";
+      group = "users";
+      mode = "0664";
+      rawMode = "0660";
+    };
   };
   services = {
     udisks2.enable = true;
