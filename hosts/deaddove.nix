@@ -1,4 +1,4 @@
-{ pkgs, inputs, lib, ... }:
+{ pkgs, inputs, ... }:
 {
   imports = [
     ../modules
@@ -48,6 +48,7 @@
   };
   nix = {
     settings.allowed-users = [ "aenri" "kiri" "nixremote" ];
+    settings.trusted-users = [ "aenri" ];
     gc = { 
       automatic = true; 
       dates = "weekly"; 
@@ -137,6 +138,10 @@
       };
     };
     iloader.enable = true;
+    claude-display = {
+      enable = true;
+      user = "aenri";
+    };
   };
   services = {
     udisks2.enable = true;

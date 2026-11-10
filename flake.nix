@@ -58,9 +58,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # macOS-only: youwen5's flake has no darwin build. this one ships the
-    # upstream-signed .app plus a home-manager module that delivers policies
-    # through `defaults` instead of writing into (and unsigning) the bundle.
     zen-browser-darwin = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -93,8 +90,16 @@
     };
 
     claude-desktop = {
-      url = "github:patrickjaja/claude-desktop-extra";
+      url = "github:aenriii/claude-desktop-extra/feat/nixos-background-display";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # TEMP: the source commit of the release tarball the claude-desktop package
+    # installs (v4.23118.1). Its js/cu_linux_executor.js is the "old" text the
+    # overlay swaps for the fork's fixed one. Drop with the overlay.
+    claude-desktop-release = {
+      url = "github:patrickjaja/claude-desktop-extra/32c0c71976678b088a2700fab0bfe5d32de4a4de";
+      flake = false;
     };
 
     deploy-rs = {
@@ -129,7 +134,7 @@
     # out-of-nixpkgs apps
     zen-browser, zen-browser-darwin, nixgl,
     niri-flake, noctalia-shell, noctalia-greeter,
-    claude-code, claude-desktop, deploy-rs,
+    claude-code, claude-desktop, claude-desktop-release, deploy-rs,
     iloader, keyroost, nix-homebrew,
     # cask inputs
     homebrew-core, homebrew-cask
@@ -138,9 +143,18 @@
     # my awesome overlay
     my-awesome-overlay = final: prev: {
       claude-code = claude-code.packages.${final.stdenv.hostPlatform.system}.claude-code;
-      claude-desktop = claude-desktop.packages.${final.stdenv.hostPlatform.system}.default;
+      # TEMP: swap in fork's cu_linux_executor to patch an upstream bug
+      claude-desktop = claude-desktop.packages.${final.stdenv.hostPlatform.system}.default.overrideAttrs (o: {
+        nativeBuildInputs = (o.nativeBuildInputs or [ ]) ++ [ final.python3 ];
+        postInstall = (o.postInstall or "") + ''
+          chmod u+w $out/lib/claude-desktop/resources $out/lib/claude-desktop/resources/app.asar
+          python3 ${./pkgs/claude-desktop-cu-fix/patch-asar.py} \
+            $out/lib/claude-desktop/resources/app.asar \
+            ${claude-desktop-release}/js/cu_linux_executor.js \
+            ${claude-desktop}/js/cu_linux_executor.js
+        '';
+      });
       keyroost = keyroost.packages.${final.stdenv.hostPlatform.system}.keyroost;
-      librepods = final.callPackage ./pkgs/librepods { };
     };
   in {
     nixosConfigurations.deaddove = nixpkgs.lib.nixosSystem {

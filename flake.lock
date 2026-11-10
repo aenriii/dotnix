@@ -113,16 +113,34 @@
         ]
       },
       "locked": {
-        "lastModified": 1793993497,
-        "narHash": "sha256-KuB2qvWR/hAxcpqB7qg67z1nVH+hcPv6CF/VVz7U/u0=",
+        "lastModified": 1794266406,
+        "narHash": "sha256-6lym/KLY94kdUWTzQ3KZdODG8QvZFE6XVYFtdZ14FFI=",
+        "owner": "aenriii",
+        "repo": "claude-desktop-extra",
+        "rev": "11922a9fdac14832d255dffaf2678bdb24cbe850",
+        "type": "github"
+      },
+      "original": {
+        "owner": "aenriii",
+        "ref": "feat/nixos-background-display",
+        "repo": "claude-desktop-extra",
+        "type": "github"
+      }
+    },
+    "claude-desktop-release": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794256725,
+        "narHash": "sha256-9OyzkjDzP7y46enG7i/6CBsYLbG7cdNT83eNoj6UYeU=",
         "owner": "patrickjaja",
         "repo": "claude-desktop-extra",
-        "rev": "98212760c3dbdd60a0387f5b494cebf49eadabd9",
+        "rev": "32c0c71976678b088a2700fab0bfe5d32de4a4de",
         "type": "github"
       },
       "original": {
         "owner": "patrickjaja",
         "repo": "claude-desktop-extra",
+        "rev": "32c0c71976678b088a2700fab0bfe5d32de4a4de",
         "type": "github"
       }
     },
@@ -802,6 +820,7 @@
         "NixVirt": "NixVirt",
         "claude-code": "claude-code",
         "claude-desktop": "claude-desktop",
+        "claude-desktop-release": "claude-desktop-release",
         "deploy-rs": "deploy-rs",
         "disko": "disko",
         "home-manager": "home-manager",
