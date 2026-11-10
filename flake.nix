@@ -90,7 +90,7 @@
     };
 
     claude-desktop = {
-      url = "github:aenriii/claude-desktop-extra/feat/nixos-background-display";
+      url = "github:patrickjaja/claude-desktop-extra";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -144,16 +144,7 @@
     my-awesome-overlay = final: prev: {
       claude-code = claude-code.packages.${final.stdenv.hostPlatform.system}.claude-code;
       # TEMP: swap in fork's cu_linux_executor to patch an upstream bug
-      claude-desktop = claude-desktop.packages.${final.stdenv.hostPlatform.system}.default.overrideAttrs (o: {
-        nativeBuildInputs = (o.nativeBuildInputs or [ ]) ++ [ final.python3 ];
-        postInstall = (o.postInstall or "") + ''
-          chmod u+w $out/lib/claude-desktop/resources $out/lib/claude-desktop/resources/app.asar
-          python3 ${./pkgs/claude-desktop-cu-fix/patch-asar.py} \
-            $out/lib/claude-desktop/resources/app.asar \
-            ${claude-desktop-release}/js/cu_linux_executor.js \
-            ${claude-desktop}/js/cu_linux_executor.js
-        '';
-      });
+      claude-desktop = claude-desktop.packages.${final.stdenv.hostPlatform.system}.default;
       keyroost = keyroost.packages.${final.stdenv.hostPlatform.system}.keyroost;
     };
   in {

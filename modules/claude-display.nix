@@ -78,6 +78,7 @@ in
         package = cfg.browser;
         executable = if cfg.allocator == "libc" then "${libcMallocLaunch} ${browserExe}" else browserExe;
       };
+      vnc.enable = true;
     };
   };
 }

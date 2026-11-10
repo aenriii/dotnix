@@ -113,16 +113,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1794266406,
-        "narHash": "sha256-6lym/KLY94kdUWTzQ3KZdODG8QvZFE6XVYFtdZ14FFI=",
-        "owner": "aenriii",
+        "lastModified": 1794272736,
+        "narHash": "sha256-o+83nUiD9vWbFQ2TiiX3gzABa8iuhxhuvw7l4s5Y+DM=",
+        "owner": "patrickjaja",
         "repo": "claude-desktop-extra",
-        "rev": "11922a9fdac14832d255dffaf2678bdb24cbe850",
+        "rev": "a9416a27f96d908da4a482d0f6ce4998948a4546",
         "type": "github"
       },
       "original": {
-        "owner": "aenriii",
-        "ref": "feat/nixos-background-display",
+        "owner": "patrickjaja",
         "repo": "claude-desktop-extra",
         "type": "github"
       }
