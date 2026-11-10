@@ -4,7 +4,6 @@ let
   shows = "/share/media/shows";
   uid = 2003;
   # stable name so it doesn't matter which renderD* the rx 7600 probes as.
-  # not the by-path link: nspawn splits --bind on ':' and chokes on the pci id
   amdRender = "/dev/dri/rx7600-render";
 in
 {
@@ -82,7 +81,7 @@ in
   ];
 
   services.udev.extraRules = ''
-    SUBSYSTEM=="drm", KERNEL=="renderD*", KERNELS=="0000:28:00.0", SYMLINK+="dri/rx7600-render"
+    SUBSYSTEM=="drm", KERNEL=="renderD*", ATTRS{vendor}=="0x1002", ATTRS{device}=="0x7480", SYMLINK+="dri/rx7600-render"
   '';
 
   systemd.tmpfiles.rules = [
