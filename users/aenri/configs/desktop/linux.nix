@@ -41,6 +41,7 @@
     obs-studio
     nautilus
     keyroost
+    fractal
   ];
 
 }
