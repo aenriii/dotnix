@@ -7,5 +7,6 @@
     ./iloader.nix
     ./claude-display.nix
     ./tpm.nix
+    ./vr
     ];
 }

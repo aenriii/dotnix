@@ -143,6 +143,13 @@
       };
     };
     iloader.enable = true;
+    vr = {
+      enable = true;
+      alvr.enable = true;
+      # flip on if SteamVR's "async reprojection disabled" / CAP_SYS_NICE
+      # nag is actually a problem. full kernel rebuild, see modules/vr.
+      amdgpuHighPriority = false;
+    };
     claude-display = {
       enable = true;
       user = "aenri";
